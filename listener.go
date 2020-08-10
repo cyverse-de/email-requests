@@ -45,7 +45,9 @@ func (l *Listener) handleMessage(delivery amqp.Delivery) {
 
 // Listen listens for and handles incoming AMQP messages.
 func (l *Listener) Listen() {
-	// Listen for incoming messages.
+	go l.amqpClient.Listen()
+
+	// Add a consumer.
 	l.amqpClient.AddConsumer(
 		l.amqpSettings.ExchangeName,
 		l.amqpSettings.ExchangeType,
