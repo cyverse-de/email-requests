@@ -28,6 +28,7 @@ type cyverseEmailErrorResponse struct {
 
 // logErrorResponse logs the error message in a response from cyverse-email.
 func (*Handler) logErrorResponse(resp *http.Response) {
+
 	// Slurp the response body.
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -50,6 +51,7 @@ func (*Handler) logErrorResponse(resp *http.Response) {
 // means that cyverse-email is down. The service aborts in that case because no useful work can be done if
 // cyverse-email is down.
 func (h *Handler) HandleMessage(delivery amqp.Delivery) error {
+
 	// Forward the request to the cyverse-email service.
 	resp, err := http.Post(h.cyverseEmailBaseURL, "application/json", bytes.NewReader(delivery.Body))
 	if err != nil {

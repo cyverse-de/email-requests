@@ -39,7 +39,7 @@ func NewListener(handler *Handler, amqpSettings *AMQPSettings) (*Listener, error
 func (l *Listener) handleMessage(delivery amqp.Delivery) {
 	err := l.handler.HandleMessage(delivery)
 	if err != nil {
-		logcabin.Error.Printf("Error occurred while handling message: %s", err.Error())
+		logcabin.Error.Printf("error occurred while handling message: %s", err.Error())
 	}
 }
 
