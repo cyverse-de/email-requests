@@ -10,5 +10,5 @@ build:
   tagPolicy:
     gitCommit: {}
   artifacts:
-    - image: discoenv/email-requests
+    - image: harbor.cyverse.org/de/email-requests
   local: {}
