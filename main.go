@@ -6,8 +6,10 @@ import (
 
 	"github.com/DavidGamba/go-getoptions"
 	"github.com/cyverse-de/configurate"
-	"github.com/cyverse-de/logcabin"
+	"github.com/sirupsen/logrus"
 )
+
+var log = logrus.WithFields(logrus.Fields{"service": "email-requests"})
 
 // commandLineOptionValues represents the values of the options that were passed on the command line when this
 // service was invoked.
@@ -57,13 +59,10 @@ func main() {
 	// Parse the command line.
 	optionValues := parseCommandLine()
 
-	// Initialize logging.
-	logcabin.Init("email-requests", "email-requests")
-
 	// Load the configuration.
 	cfg, err := configurate.InitDefaults(optionValues.Config, configurate.JobServicesDefaults)
 	if err != nil {
-		logcabin.Error.Fatal(err)
+		log.Fatal(err)
 	}
 
 	// Retrieve the AMQP settings.
@@ -82,7 +81,7 @@ func main() {
 	// Create the message listener.
 	listener, err := NewListener(handler, amqpSettings)
 	if err != nil {
-		logcabin.Error.Fatal(err)
+		log.Fatal(err)
 	}
 
 	// Listen for incoming messages.

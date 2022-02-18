@@ -6,8 +6,6 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/cyverse-de/logcabin"
-
 	"github.com/streadway/amqp"
 )
 
@@ -32,7 +30,7 @@ func (*Handler) logErrorResponse(resp *http.Response) {
 	// Slurp the response body.
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		logcabin.Error.Printf("unable to read error response body: %s", err.Error())
+		log.Errorf("unable to read error response body: %s", err.Error())
 		return
 	}
 
@@ -40,11 +38,11 @@ func (*Handler) logErrorResponse(resp *http.Response) {
 	var errorResponse cyverseEmailErrorResponse
 	err = json.Unmarshal(body, &errorResponse)
 	if err != nil {
-		logcabin.Error.Printf("unable to parse error response body: %s", err.Error())
+		log.Errorf("unable to parse error response body: %s", err.Error())
 	}
 
 	// Log the response body.
-	logcabin.Error.Printf("cyverse-email returned an error: %s", errorResponse.Message)
+	log.Errorf("cyverse-email returned an error: %s", errorResponse.Message)
 }
 
 // HandleMessage handles a single incoming AMQP delivery. A communication error with cyverse-email probably
@@ -55,7 +53,7 @@ func (h *Handler) HandleMessage(delivery amqp.Delivery) error {
 	// Forward the request to the cyverse-email service.
 	resp, err := http.Post(h.cyverseEmailBaseURL, "application/json", bytes.NewReader(delivery.Body))
 	if err != nil {
-		logcabin.Error.Fatalf("unable to communicate with cyverse-email: %s", err.Error())
+		log.Fatalf("unable to communicate with cyverse-email: %s", err.Error())
 	}
 	defer resp.Body.Close()
 
@@ -67,7 +65,7 @@ func (h *Handler) HandleMessage(delivery amqp.Delivery) error {
 	// Acknowledge the message.
 	err = delivery.Ack(false)
 	if err != nil {
-		logcabin.Error.Printf("unable to acknowledge message: %s", err.Error())
+		log.Errorf("unable to acknowledge message: %s", err.Error())
 	}
 
 	return nil

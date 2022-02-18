@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/cyverse-de/logcabin"
 	"github.com/pkg/errors"
 	"github.com/streadway/amqp"
 	"gopkg.in/cyverse-de/messaging.v7"
@@ -39,7 +38,7 @@ func NewListener(handler *Handler, amqpSettings *AMQPSettings) (*Listener, error
 func (l *Listener) handleMessage(delivery amqp.Delivery) {
 	err := l.handler.HandleMessage(delivery)
 	if err != nil {
-		logcabin.Error.Printf("error occurred while handling message: %s", err.Error())
+		log.Errorf("error occurred while handling message: %s", err.Error())
 	}
 }
 
