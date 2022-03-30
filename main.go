@@ -34,7 +34,7 @@ func jaegerTracerProvider(url string) (*tracesdk.TracerProvider, error) {
 		tracesdk.WithBatcher(exp),
 		tracesdk.WithResource(resource.NewWithAttributes(
 			semconv.SchemaURL,
-			semconv.ServiceNameKey.String("notifications"),
+			semconv.ServiceNameKey.String("email-requests"),
 		)),
 	)
 
