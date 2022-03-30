@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -48,10 +49,16 @@ func (*Handler) logErrorResponse(resp *http.Response) {
 // HandleMessage handles a single incoming AMQP delivery. A communication error with cyverse-email probably
 // means that cyverse-email is down. The service aborts in that case because no useful work can be done if
 // cyverse-email is down.
-func (h *Handler) HandleMessage(delivery amqp.Delivery) error {
+func (h *Handler) HandleMessage(ctx context.Context, delivery amqp.Delivery) error {
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, h.cyverseEmailBaseURL, bytes.NewReader(delivery.Body))
+	if err != nil {
+		log.Fatalf("unable to communicate with cyverse-email: %s", err.Error())
+	}
+
+	req.Header.Set("content-type", "application/json")
 
 	// Forward the request to the cyverse-email service.
-	resp, err := http.Post(h.cyverseEmailBaseURL, "application/json", bytes.NewReader(delivery.Body))
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		log.Fatalf("unable to communicate with cyverse-email: %s", err.Error())
 	}

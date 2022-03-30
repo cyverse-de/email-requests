@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
+
+	"github.com/cyverse-de/messaging/v9"
 	"github.com/pkg/errors"
 	"github.com/streadway/amqp"
-	"gopkg.in/cyverse-de/messaging.v7"
 )
 
 const queueName = "email_requests"
@@ -35,8 +37,8 @@ func NewListener(handler *Handler, amqpSettings *AMQPSettings) (*Listener, error
 }
 
 // handleMessage handles a single incoming AMQP message.
-func (l *Listener) handleMessage(delivery amqp.Delivery) {
-	err := l.handler.HandleMessage(delivery)
+func (l *Listener) handleMessage(ctx context.Context, delivery amqp.Delivery) {
+	err := l.handler.HandleMessage(ctx, delivery)
 	if err != nil {
 		log.Errorf("error occurred while handling message: %s", err.Error())
 	}
