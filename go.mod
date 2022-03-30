@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/DavidGamba/go-getoptions v0.20.2
 	github.com/cyverse-de/configurate v0.0.0-20200527185205-4e1e92866cee
-	github.com/cyverse-de/messaging/v9 v9.1.3
+	github.com/cyverse-de/messaging/v9 v9.1.4
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.4.2
