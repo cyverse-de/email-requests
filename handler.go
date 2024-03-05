@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/streadway/amqp"
@@ -29,7 +29,7 @@ type cyverseEmailErrorResponse struct {
 func (*Handler) logErrorResponse(resp *http.Response) {
 
 	// Slurp the response body.
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Errorf("unable to read error response body: %s", err.Error())
 		return
